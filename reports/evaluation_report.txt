@@ -1,0 +1,14 @@
+Accuracy score of training dataset: 0.7866449511400652
+Accuracy score of test dataset: 0.7727272727272727
+Confusion Matrix:
+[[91  9]
+ [26 28]]
+Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.78      0.91      0.84       100
+           1       0.76      0.52      0.62        54
+
+    accuracy                           0.77       154
+   macro avg       0.77      0.71      0.73       154
+weighted avg       0.77      0.77      0.76       154

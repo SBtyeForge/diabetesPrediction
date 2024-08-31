@@ -1,0 +1,71 @@
+# tests/test_model.py
+
+import pytest
+import joblib
+import logging
+from src.data_preprocessing import load_data, preprocess_data, split_data
+from src.model_training import train_model, load_model
+from src.evaluation import evaluate_model
+
+# Helper function to log results
+def log_results(test_name, result, log_file='reports/test_results.log'):
+    with open(log_file, 'a') as f:
+        f.write(f'Test: {test_name}\n')
+        f.write(f'Result: {"Pass" if result else "Fail"}\n')
+        f.write('-' * 40 + '\n')
+
+def test_data_loading():
+    try:
+        df = load_data('data/raw/diabetes.csv')
+        result = not df.empty
+        log_results('test_data_loading', result)
+    except Exception as e:
+        log_results('test_data_loading', False)
+        raise e
+
+def test_preprocessing():
+    try:
+        df = load_data('data/raw/diabetes.csv')
+        X, Y = preprocess_data(df)
+        result = X.shape[0] == Y.shape[0]
+        log_results('test_preprocessing', result)
+    except Exception as e:
+        log_results('test_preprocessing', False)
+        raise e
+
+def test_model_training_and_saving():
+    try:
+        df = load_data('data/raw/diabetes.csv')
+        X, Y = preprocess_data(df)
+        X_train, X_test, Y_train, Y_test = split_data(X, Y)
+        model = train_model(X_train, Y_train)
+        
+        # Check if the model file is created
+        model_exists = joblib.load('models/model.pkl') is not None
+        log_results('test_model_training_and_saving', model_exists)
+    except Exception as e:
+        log_results('test_model_training_and_saving', False)
+        raise e
+
+def test_model_loading():
+    try:
+        model = load_model('models/model.pkl')
+        result = model is not None
+        log_results('test_model_loading', result)
+    except Exception as e:
+        log_results('test_model_loading', False)
+        raise e
+
+def test_evaluation():
+    try:
+        df = load_data('data/raw/diabetes.csv')
+        X, Y = preprocess_data(df)
+        X_train, X_test, Y_train, Y_test = split_data(X, Y)
+        model = train_model(X_train, Y_train)
+        train_accuracy, test_accuracy, cnf_matrix, class_report = evaluate_model(model, X_train, Y_train, X_test, Y_test)
+        
+        result = train_accuracy > 0 and test_accuracy > 0
+        log_results('test_evaluation', result)
+    except Exception as e:
+        log_results('test_evaluation', False)
+        raise e
