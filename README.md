@@ -50,7 +50,7 @@ diabetes_prediction/
 1. **Clone the Repository**
 
    ```bash
-   git clone https://github.com/your-repository/diabetes_prediction.git
+   git clone hhttps://github.com/SBtyeForge/diabetesPrediction.git
    cd diabetes_prediction
    ```
 
